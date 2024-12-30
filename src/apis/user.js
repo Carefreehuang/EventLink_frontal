@@ -11,3 +11,18 @@ export const loginAPI = ({username, password}) => {
         }
     })
 }
+
+export const registerAPI = ({username, password, email, phone, schoolName, major}) => {
+    return httpInstance({
+        url:'/user/register',
+        method:'POST',
+        data:{
+            username,
+            password,
+            email,
+            phone,
+            schoolName,
+            major
+        }
+    })
+}
