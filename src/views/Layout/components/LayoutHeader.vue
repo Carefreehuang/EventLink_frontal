@@ -1,5 +1,105 @@
+<script setup>
+import { IconPenFill, IconMessage } from '@arco-design/web-vue/es/icon';
+</script>
+
 <template>
-    <header>
-        
-    </header>
-</template>
+    <a-layout-header class="header">
+      <!-- Logo -->
+      <div class="logo">EventLink</div>
+  
+      <!-- 导航菜单 -->
+      <a-menu mode="horizontal" :default-selected-keys="['1']">
+        <a-menu-item key="1">首页</a-menu-item>
+        <a-menu-item key="2">竞赛</a-menu-item>
+        <a-menu-item key="3">论坛</a-menu-item>
+        <a-menu-item key="4">关于我们</a-menu-item>
+      </a-menu>
+  
+      <!-- 用户头像 -->
+      <a-popover placement="bottomRight" trigger="hover">
+        <template #content>
+          <div class="user-info">
+            <a-avatar :size="64" class="info-avatar">用户</a-avatar>
+            <p class="username">用户名：JohnDoe</p>
+            <p class="schoolName">学校：武汉理工大学</p>
+            <p class="email">邮箱：john@example.com</p>
+            <a-button type="primary" block @click="handleLogout">退出登录</a-button>
+          </div>
+        </template>
+        <a-avatar class="avatar" :size="40">用户</a-avatar>
+      </a-popover>
+
+      <a href="#" class="message-link">
+            <div class="icon-wrapper">
+                <IconMessage :size="24" />
+                <span class="text">消息</span>
+            </div>
+        </a>
+      
+
+        <a-button type="primary" shape="round">
+            <template #icon>
+                <icon-pen-fill />
+            </template>
+            <template #default>发布</template>
+        </a-button>
+    
+    </a-layout-header>
+  </template>
+  
+  <style scoped>
+
+  .header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 0 90px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .avatar {
+    margin-left: 20px;
+    cursor: pointer;
+    margin: 20px;
+  }
+  
+  .user-info {
+    text-align: center;
+  }
+  
+  .info-avatar {
+    margin-bottom: 10px;
+  }
+  
+  .username,
+  .email {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  .message-link {
+    text-decoration: none; /* 去掉链接下划线 */
+    color: #4E5969; /* 继承父元素颜色 */
+    width: 80px; /* 设置宽度 */
+    }
+
+    .icon-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .text {
+        margin-top: 2px; /* 调整文字与图标的间距 */
+        font-size: 14px; /* 文字大小 */
+        color: #4E5969 /* 使用 Arco 的设计变量 */
+    }
+  </style>
