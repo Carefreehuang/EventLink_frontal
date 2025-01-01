@@ -38,11 +38,16 @@ const doLogout = async () => {
     <a-popover v-if="userStore.isLogin" placement="bottomRight" trigger="hover">
       <template #content>
         <div class="user-info">
-          <a-avatar :size="64" class="info-avatar">用户</a-avatar>
-          <p class="username">用户名：{{userStore.userInfo.username}}</p>
-          <p class="schoolName">学校：{{userStore.userInfo.schoolName}}</p>
-          <p class="email">邮箱：{{userStore.userInfo.email}}</p>
-          <a-button type="primary" block @click="doLogout">退出登录</a-button>
+          <div class="user-info-header">
+            <a-avatar :size="40" class="info-avatar">用户</a-avatar>
+            <p class="username">{{ userStore.userInfo.username }}</p>
+          </div>
+          <p class="schoolAndMajor">{{ userStore.userInfo.schoolName }} {{ userStore.userInfo.major }}</p>
+          <a-divider margin="0"/>
+          <div style="display: inline-block;">
+            <a-button type="primary" shape="round" @click="router.replace(`/users/${userStore.userInfo.id}`)">个人中心</a-button>
+            <a-button type="primary" shape="round" @click="doLogout">退出登录</a-button>
+          </div>
         </div>
       </template>
       <a-avatar class="avatar" :size="40">用户</a-avatar>
@@ -91,17 +96,41 @@ const doLogout = async () => {
 }
 
 .user-info {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 内容靠左对齐 */
+  gap: 8px;
+  /* 元素之间的间距 */
+}
+
+.user-info-header {
+  display: flex;
+  align-items: center;
+  /* 头像和用户名水平对齐 */
+  gap: 12px;
+  /* 头像和用户名之间的间距 */
+}
+
+.username {
+  font-size: 20px;
+  /* 用户名字体大小 */
+  margin: 0;
+  /* 去除默认 margin */
+}
+
+.schoolAndMajor {
+  font-size: 12px;
+  /* 学校专业字体稍小 */
+  color: #666;
+  /* 字体颜色稍浅 */
+  margin: 0;
+  /* 去除默认 margin */
 }
 
 .info-avatar {
-  margin-bottom: 10px;
-}
-
-.username,
-.email {
-  margin: 5px 0;
-  font-size: 14px;
+  margin-right: 12px;
+  /* 头像右侧间距 */
 }
 
 .message-link {
