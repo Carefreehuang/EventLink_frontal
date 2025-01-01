@@ -26,3 +26,10 @@ export const registerAPI = ({username, password, email, phone, schoolName, major
         }
     })
 }
+
+export const logoutAPI = () => {
+    return httpInstance({
+        url:'/user/logout',
+        method:'POST',
+    })
+}

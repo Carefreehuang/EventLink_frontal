@@ -1,10 +1,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { loginAPI, registerAPI } from '@/apis/user';
+import { registerAPI } from '@/apis/user';
 import { Message } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore()
 const router = useRouter()
 // 定义响应式数据
 const isLogin = ref(true); // 当前是否为登录模式
@@ -64,20 +66,19 @@ const toggleMode = () => {
 const doLogin = async () => {
   loading.value = true;
   try {
-    const res = await loginAPI({
+    const res = await userStore.getUserInfo({
       username: form.value.username,
       password: form.value.password,
     });
-    if (res.data.code !== 500) {
+    if (res.code !== 500) {
       Message.success('登录成功');
-      console.log('登录成功', res);
       // 处理登录成功逻辑，如跳转到首页
       router.replace({path:'/'})
     } else {
-      Message.error(res.data.msg);
+      Message.error(res.msg);
     }
   } catch (error) {
-    Message.error('登录失败，请稍后重试');
+    Message.error('登录失败，请稍后重试',error);
   } finally {
     loading.value = false;
   }
@@ -112,14 +113,11 @@ const doRegister = async () => {
 // 登录或注册
 const LoginOrRegister = async () => {
   try {
-    const valid = await formRef.value.validate();
-    console.log('valid', valid);
-    if (!valid) {
-      if (isLogin.value) {
-        await doLogin();
-      } else {
-        await doRegister();
-      }
+    await formRef.value.validate(); // 验证表单，如果验证不通过会抛出异常
+    if (isLogin.value) {
+      await doLogin();
+    } else {
+      await doRegister();
     }
   } catch (error) {
     Message.error('请检查表单填写是否正确');
