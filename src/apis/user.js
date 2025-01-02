@@ -33,3 +33,35 @@ export const logoutAPI = () => {
         method:'POST',
     })
 }
+
+export const fetchUserInfo = (id) => {
+    // params是查询参数
+    // return httpInstance({
+    //     url:'/user',
+    //     params:{
+    //         id
+    //     }
+    // })
+    return httpInstance({
+        url:`/user/${id}`,
+        method:'GET'
+    })
+}
+
+export const updateUserInfo = (id, userData) => {
+    console.log('userData',userData)
+    // 解构赋值
+    const {username, email, phone, schoolName, className, major} = userData
+    return httpInstance({
+        url:`/user/update/${id}`,
+        method:'POST',
+        data:{
+            username,
+            email,
+            phone,
+            schoolName,
+            className,
+            major
+        }
+    })
+}
