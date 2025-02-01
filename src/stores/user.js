@@ -24,6 +24,7 @@ export const useUserStore = defineStore('user', () => {
   const getNewUserInfo = async (id) => {
     console.log('id',id)
     const res = await fetchUserInfo(id)
+    console.log('res',res)
     userInfo.value = res.data.data
     console.log('userInfo',userInfo.value)
   }

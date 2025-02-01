@@ -16,14 +16,18 @@
         <a-popover placement="bottomRight" trigger="hover">
             <template #content>
             <div class="user-info">
-                <a-avatar :size="64" class="info-avatar">用户</a-avatar>
+                <a-avatar :size="64" class="info-avatar" >
+                  <img :src="userInfo.avatarUrl" alt="用户头像" />
+                </a-avatar>
                 <p class="username">用户名：JohnDoe</p>
                 <p class="schoolName">学校：武汉理工大学</p>
                 <p class="email">邮箱：john@example.com</p>
                 <a-button type="primary" block @click="handleLogout">退出登录</a-button>
             </div>
             </template>
-            <a-avatar class="avatar" :size="40">用户</a-avatar>
+            <a-avatar class="avatar" :size="40">
+                  <img :src="userInfo.avatarUrl" alt="用户头像" />
+            </a-avatar>
         </a-popover>
         </a-layout-header>
   </template>

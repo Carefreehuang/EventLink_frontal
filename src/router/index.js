@@ -4,6 +4,7 @@ import Login from '@/views/Login/index.vue'
 import Layout from '@/views/Layout/index.vue'
 import Home from '@/views/Home/index.vue'
 import User from '@/views/User/index.vue'
+import Post from '@/views/Post/index.vue'
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
@@ -23,6 +24,10 @@ const router = createRouter({
                     component:User
 
                 },
+                {
+                    path:'post',
+                    component:Post
+                }
             ]
         },
         {

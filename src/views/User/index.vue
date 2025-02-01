@@ -2,8 +2,10 @@
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref, computed } from 'vue';
-import { fetchUserInfo, updateUserInfo } from '@/apis/user';
+import { fetchUserInfo, updateAvatar, updateUserInfo } from '@/apis/user';
 import { Message } from '@arco-design/web-vue';
+import { uploadAPI } from '@/apis/common';
+import { IconCamera } from '@arco-design/web-vue/es/icon';
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -32,6 +34,9 @@ const editForm = ref({
     email: '',
 });
 
+// 头像上传输入框引用
+const avatarInputRef = ref(null);
+
 // 打开编辑弹窗
 const openEditModal = () => {
     // 将当前用户信息填充到表单中
@@ -53,11 +58,41 @@ const saveEdit = async () => {
     }
 };
 
+// 点击头像触发文件选择框
+const handleAvatarClick = () => {
+    if (isCurUser.value) {
+        avatarInputRef.value.click();
+    }
+};
+
+// 处理文件选择
+const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        try {
+            const res = await uploadAPI(file);
+            updateAvatar(curUserId.value, res.data.data);
+            if (res.data.code === 200) {
+                // 更新用户信息中的头像 URL
+                // ...
+                Message.success('头像更新成功');
+                userStore.getNewUserInfo(curUserId.value);
+            } else {
+                Message.error('头像更新失败');
+            }
+        } catch (error) {
+            console.error('头像上传失败:', error);
+            Message.error('头像上传失败，请稍后重试');
+        }
+    }
+};
+
 onMounted(async () => {
     try {
         if (isCurUser.value) {
             // 如果是当前用户，直接获取用户信息
             userInfo.value = userStore.userInfo;
+            console.log('当前用户信息:', userInfo.value);
         } else {
             // 否则，通过接口获取目标用户信息
             const res = await fetchUserInfo(targetUserId);
@@ -111,8 +146,9 @@ const deletePost = (id) => {
                 <!-- 头像 -->
                 <a-col :span="4">
                     <a-avatar :size="100" class="avatar">
-                        <img src="https://avatars.githubusercontent.com/u/12345678?v=4" alt="用户头像" />
+                        <img :src="userInfo.avatarUrl" alt="用户头像" />
                     </a-avatar>
+                    <input ref="avatarInputRef" type="file" style="display: none" @change="handleFileChange" />
                 </a-col>
                 <!-- 用户信息 -->
                 <a-col :span="20">
@@ -149,7 +185,13 @@ const deletePost = (id) => {
     <!-- 编辑个人资料弹窗 -->
     <a-modal v-model:visible="editModalVisible" title="编辑个人资料" @ok="saveEdit" @cancel="editModalVisible = false"
         shape="round">
-        <a-form :model="editForm" layout="vertical">
+        <a-avatar :size="100" class="edit-avatar" @click="handleAvatarClick">
+            <img :src="userInfo.avatarUrl" alt="用户头像" />
+            <template #trigger-icon>
+                <IconCamera />
+            </template>
+        </a-avatar>
+        <a-form :model="editForm" layout="horizontal" class="edit-form">
             <a-form-item label="用户名">
                 <a-input v-model="editForm.username" />
             </a-form-item>
@@ -186,6 +228,26 @@ const deletePost = (id) => {
 
 .avatar {
     margin-right: 24px;
+}
+
+.edit-avatar {
+    display: flex;
+    justify-content: center;
+    /* 水平居中 */
+    align-items: center;
+    /* 垂直居中 */
+    margin-left: 190px;
+    margin-bottom: 20px;
+}
+
+.edit-form .arco-form-item-label {
+    text-align: left;
+    /* 标签左对齐 */
+}
+
+.edit-form .arco-form-item-control {
+    flex: 1;
+    /* 输入框占据剩余空间 */
 }
 
 .username {

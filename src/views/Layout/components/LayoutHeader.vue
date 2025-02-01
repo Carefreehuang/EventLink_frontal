@@ -1,12 +1,20 @@
 <script setup>
-import { IconPenFill, IconMessage } from '@arco-design/web-vue/es/icon';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { logoutAPI } from '@/apis/user';
 import { Message } from '@arco-design/web-vue';
+import { onMounted, ref } from 'vue';
 
 const router = useRouter();
 const userStore = useUserStore();
+
+// 用户信息
+const userInfo = ref({});
+onMounted(async () => {
+  if (userStore.isLogin) {
+    userInfo.value = userStore.userInfo;
+  }
+});
 
 const doLogout = async () => {
   try {
@@ -28,7 +36,7 @@ const doLogout = async () => {
 
     <!-- 导航菜单 -->
     <a-menu mode="horizontal" :default-selected-keys="['1']">
-      <a-menu-item key="1">首页</a-menu-item>
+      <a-menu-item key="1" >首页</a-menu-item>
       <a-menu-item key="2">竞赛</a-menu-item>
       <a-menu-item key="3">论坛</a-menu-item>
       <a-menu-item key="4">关于我们</a-menu-item>
@@ -39,7 +47,9 @@ const doLogout = async () => {
       <template #content>
         <div class="user-info">
           <div class="user-info-header">
-            <a-avatar :size="40" class="info-avatar">用户</a-avatar>
+            <a-avatar :size="40" class="info-avatar">
+              <img :src="userInfo.avatarUrl" alt="用户头像" />
+            </a-avatar>
             <p class="username">{{ userStore.userInfo.username }}</p>
           </div>
           <p class="schoolAndMajor">{{ userStore.userInfo.schoolName }} {{ userStore.userInfo.major }}</p>
@@ -50,7 +60,9 @@ const doLogout = async () => {
           </div>
         </div>
       </template>
-      <a-avatar class="avatar" :size="40">用户</a-avatar>
+      <a-avatar class="avatar" :size="40">
+        <img :src="userInfo.avatarUrl" alt="用户头像" />
+      </a-avatar>
     </a-popover>
     <a-button v-else type="primary" shape="round" @click="router.replace('/login')">登录/注册</a-button>
 

@@ -65,3 +65,9 @@ export const updateUserInfo = (id, userData) => {
         }
     })
 }
+export const updateAvatar = (id, avatar) => {
+    return httpInstance({
+        url:`/user/updateUserAvatar/${id}?avatar=${avatar}`,
+        method:'POST'
+    })
+}
